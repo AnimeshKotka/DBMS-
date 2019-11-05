@@ -1,0 +1,197 @@
+NAME :- Animesh Kotka
+ASSIGNMENT :- Assignment 1
+DATE :- 27/08019
+EXAM ID :- 510817062
+
+
+___________________________________________________________________________________________________
+CREATE TABLE cust(
+    Cust_id varchar2(3),
+    Lname varchar2(15),
+    Fname varchar2(15),
+    Area varchar2(2),
+    Phone_no number(8) 
+);
+
+CREATE TABLE movie(
+    Mv_no number(2),
+    Title varchar2(25),
+    Type varchar2(10),
+    Star varchar2(25),
+    Price number(8,2) 
+);
+
+
+CREATE TABLE invoice(
+    Inv_no varchar2(3),
+    Mv_no number(2),
+    Cust_id varchar2(3),
+    Issue_date date,
+    Return_date date 
+);
+
+INSERT INTO invoice VALUES ('1a',1,'2','28-JUL-2018','03-MAY-2019');
+INSERT INTO invoice VALUES ('1b',2,'3','18-JUN-2018','13-MAY-2019');
+INSERT INTO invoice VALUES ('1c',3,'4','08-MAY-2018','23-MAY-2019');
+INSERT INTO invoice VALUES ('1d',4,'5','07-JUL-2018','13-AUG-2019');
+INSERT INTO invoice VALUES ('1e',5,'1','28-MAY-2018','03-MAY-2019');
+
+
+
+select Fname from cust
+;
+
+
+ SELECT Fname FROM cust where Phone_no>555000
+ ;
+
+
+
+
+ SELECT Title FROM movie where Type = 'Action' or Type = 'Comedy'
+ ;
+
+
+
+ SELECT Title FROM movie where Price >150 and Price <=250;
+
+
+  SELECT Fname FROM cust WHERE SUBSTR(Fname,2,1) = 'a';
+__________________________________________________________________________________________________________
+						***NOTES***
+
+
+update table_name
+Set dept(col) '(name)' where name= 'some';
+
+delete---- 
+	Delete stu;
+	desc stu;
+	drop;
+
+Select name from stu Orderby name,roll;(default acending but dec type dec)
+
+Select roll from stu where name like 'ab%';('__b%' third char is b. Pattern match)
+
+__________________________________________________________________________________________________________
+
+
+ select Fname from cust where Lname like 'B%' or Lname like 'J%';
+ select Fname from cust where Area like '_1%';
+ 10-> select Mv_no, Title,Type from movie where Star like 'R%';
+ 11->select Title from movie where Price > 150;
+     select Price*15 from movie;
+ 12-> select Title from movie order by Title;
+ 13-> select Title, Type from movie where Type != 'Action';
+ 14-> select Price/(Price-100) from movie where Title = 'Avengers_Infinity';
+ 15-> SELECT Cust_id, Lname, Fname, Area FROM cust;
+ 16->SELECT Fname FROM cust;
+ 17-> SELECT * FROM invoice WHERE Issue_date LIKE '##-SEP-##';
+
+__________________________________________________________________________________________________________
+						***NOTES***
+Functions --
+ 	1. Group Func 2.Scalar func
+
+	1.Group :applied for set of values not for a single valued.
+		 select Max(col name) from salary;
+		 count(*) - no of rows
+		Dual : Its a dummy table for arithamtic  operation
+		sysDate for dispaly system date but from dual will work
+		Upper() change into Upper clss
+			 select upper('animesh') from dual
+		SUBSTR (char, strt, end): for substring 
+		
+
+
+		select des,Max(price), dno from emp group by dno;
+		Having count(*) >3 for filtering the content of the group by
+		Joinning operaton : 
+				select dname from emp,dept where emp.dnp = dept.dnp(for same name)
+				and no = 'e1';
+
+__________________________________________________________________________________________________________
+18-> select count(*) from cust;
+19-> select sum(Price) from movie;
+20-> select avg(Price) from movie;
+21-> select max(Price) as max_price, Min(Price) as min_price from movie;
+22-> select count(Price) from movie where Price >=150;
+23->
+24-> select avg(Price) from movie group by Type;
+25-> select count(*) from movie group by type;
+26-> select count(*) from movie group by Type having Type = 'Comedy' or Type = 'Action';
+27-> select Type, avg(Price) from movie group by Type having max(price) >=100;
+28-> select Type,avg(price) from movie group by Type having Type='Comedy' or Type='Action' and max(price)<=100;
+29-> select mv_no from cust,invoice where fname ='Animesh' and invoice.cust_id = cust.Cust_id; 
+30-> select mv_no from cust,invoice where invoice.cust_id = cust.Cust_id;
+31-> select movie.Title, invoice.Cust_id,movie.Mv_no from movie,invoice where invoice.Mv_no=movie.Mv_no; 
+32-> select Type,Title from movie, cust where Fname = 'Animesh';
+33-> select fname from movie,cust,invoice where cust.Cust_id=invoice.Cust_id and invoice.Mv_no=movie_no;
+34-> select 'Movie Taken by',  cust.Fname, cust.Lname,movie.Title from cust, movie where movie.Mv_no
+__________________________________________________________________________________________________________
+						***NOTES***
+
+	SubQuery:
+
+	Select... 
+	From..
+	whre dno =/IN (Select ..
+		     From ..
+		       Where..);
+
+Joinning with itself 
+	Select M.name from emp E,emp M
+	where E.mgn=M.eno
+
+Date Conversion:
+
+Char into num or vice varsa
+To_number(char)// Return cross num
+To_char(v,f)//value,format
+
+DD-MM-YY format ; for diplay as DD/MM/YY
+select to_char(issue_date,'DD/MM/YY') from invoice;
+for changing the contain:
+to_date('12/6/95', 'DD/MM/YY');
+__________________________________________________________________________________________________________
+35->  select cust.Fname,cust.Lname from cust where Cust_id IN (select invoice.Cust_id from invoice where invoice.Mv_no=3);
+36->  select cust.fname, cust.Area from cust where Cust_id IN (select invoice.Cust_id  from invoice where  Inv_no='1c');
+37->  select Title from movie where Mv_no IN (select invoice.Mv_no from invoice where invoice.Cust_id In 
+	(select cust.Cust_id from cust where cust.Fname = 'Animesh' or cust.Fname = 'Tejas'));
+38->  SELECT Type, Mv_no FROM movie WHERE Mv_no = ANY(SELECT Mv_no FROM invoice WHERE Cust_id='1a' OR Cust_id = '1c');
+39->  select invoice.Cust_id from invoice where Mv_no IN (select Mv_no from movie where Star='RDJ');
+40-> SELECT Fname, Lname, Phone_no FROM cust WHERE Cust_id = ANY(SELECT Cust_id FROM invoice WHERE to_char(Issue_date, 'mm') < 08);
+41-> SELECT Mv_no,Title FROM movie WHERE Mv_no = ANY(SELECT Mv_no FROM invoice);
+42-> SELECT Inv_no,Issue_date FROM invoice;
+43-> SELECT Cust_id,to_char(Return_date,  'month' ) FROM invoice;
+44-> SELECT Inv_no,to_char(Return_date,  'dd-month-yy' ) FROM invoice; 
+45->  SELECT ( SYSDATE + 15 ) FROM DUAL;
+46-> SELECT ROUND(SYSDATE-Return_date) FROM DUAL,invoice;
+
+__________________________________________________________________________________________________________
+47->  UPDATE cust SET Phone_no = 00466389 WHERE Fname = 'Animesh';
+48-> UPDATE invoice SET Issue_date = '24-JUL-93' WHERE Cust_id= '1';
+49->  DELETE FROM invoice WHERE Inv_no= '1a';
+50-> DELETE FROM invoice WHERE Return_date < '10-JUL-93';
+51-> UPDATE invoice SET Return_date = '16-AUG-93' WHERE Inv_no='1b';
+
+__________________________________________________________________________________________________________
+						***NOTES***
+
+Alter table name 
+add col ...
+drop col ...
+modify add ___ 
+
+
+
+
+
+
+
+
+
+
+
+
+
